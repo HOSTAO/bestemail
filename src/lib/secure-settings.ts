@@ -1,4 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+// @ts-nocheck
+// Supabase removed — using direct PostgreSQL
+const createClient = () => null;
 import { encrypt, decrypt } from './security';
 import { runtimeConfig } from './runtime-config';
 

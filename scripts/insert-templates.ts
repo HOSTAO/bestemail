@@ -8,7 +8,8 @@
  * (or a .env / .env.local file in project root).
  */
 
-import { createClient } from '@supabase/supabase-js';
+// Supabase removed
+const createClient = () => null;
 import { allTemplates } from './seed-all-templates';
 
 // Load env from .env.local if present

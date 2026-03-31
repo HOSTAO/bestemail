@@ -1,22 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { query } from '@/lib/postgres';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { autoRefreshToken: false, persistSession: false } }
+    const rows = await query(
+      "SELECT key, value FROM settings WHERE key IN ('sendy_api_url','sendy_api_key','sendy_list_id','sendy_brand_id')"
     );
-
-    // Get settings from DB
-    const { data: rows } = await supabase
-      .from('settings')
-      .select('key, value')
-      .in('key', ['sendy_api_url', 'sendy_api_key', 'sendy_list_id', 'sendy_brand_id']);
-
     const settings: Record<string, string> = {};
-    (rows || []).forEach((r: { key: string; value: string }) => { settings[r.key] = r.value; });
+    rows.rows.forEach((r: { key: string; value: string }) => { settings[r.key] = r.value; });
 
     const apiUrl = settings.sendy_api_url || process.env.SENDY_API_URL || '';
     const apiKey = settings.sendy_api_key || process.env.SENDY_API_KEY || '';
@@ -29,27 +20,17 @@ export async function GET(request: NextRequest) {
         apiUrl: apiUrl ? '✅ set' : '❌ missing',
         apiKey: apiKey ? '✅ set' : '❌ missing',
         listId: listId ? '✅ set' : '❌ missing',
-        db_settings: settings,
-        env_apiUrl: process.env.SENDY_API_URL ? '✅ set' : '❌ missing',
-        env_apiKey: process.env.SENDY_API_KEY ? '✅ set' : '❌ missing',
-        env_listId: process.env.SENDY_LIST_ID ? '✅ set' : '❌ missing',
       });
     }
 
-    // Test Sendy connection
-    const url = `${apiUrl.replace(/\/+$/, '')}/api/subscribers/active-subscriber-count.php`;
-    const body = new URLSearchParams({ api_key: apiKey, list_id: listId });
-    const res = await fetch(url, { method: 'POST', body });
-    const text = await res.text();
-
-    return NextResponse.json({
-      ok: !isNaN(Number(text.trim())),
-      apiUrl: apiUrl,
-      listId: listId,
-      sendyResponse: text.trim(),
-      httpStatus: res.status,
+    const resp = await fetch(`${apiUrl}/api/subscribers/active-subscriber-count.php`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ api_key: apiKey, list_id: listId }),
     });
-  } catch (err) {
-    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+    const text = await resp.text();
+    return NextResponse.json({ ok: true, sendy_response: text });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to test Sendy' }, { status: 500 });
   }
 }

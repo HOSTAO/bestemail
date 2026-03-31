@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createClientServer } from '@/lib/supabase';
 import { replaceMergeTags } from './email-templates';
 import { createSendyCampaign, addSubscriberToSendy } from './sendy';

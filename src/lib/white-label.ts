@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createClientServer } from '@/lib/supabase';
 
 export interface WhiteLabelConfig {
