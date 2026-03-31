@@ -45,6 +45,10 @@ export const runtimeConfig = {
   instasentApiToken: readFirstEnv('INSTASENT_API_TOKEN', 'NEXT_PUBLIC_INSTASENT_API_TOKEN'),
   allowLocalDataFallback:
     env !== 'production' || process.env.ALLOW_LOCAL_DATA_FALLBACK === 'true',
+  appwriteEndpoint: readFirstEnv('NEXT_PUBLIC_APPWRITE_ENDPOINT', 'APPWRITE_ENDPOINT') || 'https://cloud.hostao.com/v1',
+  appwriteProject: readFirstEnv('NEXT_PUBLIC_APPWRITE_PROJECT', 'APPWRITE_PROJECT') || 'bestemail-app',
+  appwriteKey: readFirstEnv('APPWRITE_API_KEY', 'APPWRITE_KEY'),
+  appwriteDatabase: readFirstEnv('APPWRITE_DATABASE_ID', 'APPWRITE_DATABASE') || 'main',
 };
 
 export function getDataMode() {
