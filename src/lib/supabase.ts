@@ -1,30 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
-import { runtimeConfig } from './runtime-config';
+// Supabase has been removed — using direct PostgreSQL via src/lib/postgres.ts
+// These stubs exist so existing imports don't break during migration.
 
-const supabaseUrl = runtimeConfig.supabaseUrl;
-const supabaseAnonKey = runtimeConfig.supabaseAnonKey;
-const supabaseServiceKey = runtimeConfig.supabaseServiceRoleKey;
+export const supabase: any = null;
+export const supabaseAdmin: any = null;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase public environment variables not set. Public data features will be limited until configuration is completed.');
+export function createClientServer() {
+  return null;
 }
 
-// Public client for client-side operations
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
-
-// Admin client for server-side operations
-export const supabaseAdmin = supabaseUrl && supabaseServiceKey
-  ? createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    })
-  : null;
-
-// Database types
+// Database types (kept for shared use across the codebase)
 export interface User {
   id: string;
   email: string;
@@ -121,9 +105,4 @@ export interface Form {
   submissions_count: number;
   created_at: string;
   updated_at: string;
-}
-
-// Helper function for server-side operations
-export function createClientServer() {
-  return supabaseAdmin || supabase;
 }

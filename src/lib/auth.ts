@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server';
 import crypto from 'crypto';
-import { createClientServer } from './supabase';
-import { readDb } from './store';
+import { query } from './postgres';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -155,26 +154,13 @@ function normalizeStoredUser(user: StoredUser | null | undefined): AuthUser | nu
 
 async function findStoredUserByEmail(email: string): Promise<StoredUser | null> {
   const normalizedEmail = email.toLowerCase().trim();
-  const client = createClientServer();
 
-  if (client) {
-    const { data, error } = await client
-      .from('users')
-      .select('*')
-      .eq('email', normalizedEmail)
-      .maybeSingle();
+  const result = await query(
+    `SELECT * FROM users WHERE email = $1 LIMIT 1`,
+    [normalizedEmail]
+  );
 
-    if (error) {
-      throw error;
-    }
-
-    if (data) {
-      return data as StoredUser;
-    }
-  }
-
-  const localUser = readDb().users.find((user) => user.email === normalizedEmail);
-  return localUser || null;
+  return (result.rows[0] as StoredUser) || null;
 }
 
 export function hashPassword(password: string): string {
