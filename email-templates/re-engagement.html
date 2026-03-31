@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>We miss you, {{first_name}} — {{company_name}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; }
+    .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+    .header { background-color: #7c3aed; padding: 48px 20px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 30px; }
+    .header p { color: #ddd6fe; margin: 10px 0 0; font-size: 16px; }
+    .content { padding: 40px 20px; text-align: center; }
+    .content p { font-size: 16px; color: #444; line-height: 1.7; margin: 0 0 16px; }
+    .value-grid { display: flex; gap: 16px; margin: 28px 0; }
+    .value-item { flex: 1; background: #faf5ff; border-radius: 8px; padding: 20px 12px; }
+    .value-item .icon { font-size: 28px; margin-bottom: 8px; }
+    .value-item p { font-size: 13px; color: #555; margin: 0; line-height: 1.5; }
+    .button { display: inline-block; background-color: #7c3aed; color: #ffffff; padding: 15px 36px; text-decoration: none; border-radius: 5px; margin: 24px 0; font-size: 16px; font-weight: bold; }
+    .offer-box { background: #f0fdf4; border: 2px dashed #16a34a; border-radius: 8px; padding: 20px; margin: 24px 0; }
+    .offer-box p { color: #15803d; margin: 0 0 6px; font-size: 15px; font-weight: bold; }
+    .offer-box span { font-size: 13px; color: #555; }
+    .soft-exit { font-size: 14px; color: #aaa; margin-top: 24px; }
+    .soft-exit a { color: #7c3aed; text-decoration: none; }
+    .footer { background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 13px; color: #888; }
+    .footer a { color: #7c3aed; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💜 We miss you, {{first_name}}!</h1>
+      <p>It's been a while. Here's what's new at {{company_name}}.</p>
+    </div>
+
+    <div class="content">
+      <p>We noticed you haven't been around lately. We get it — life gets busy. But we'd love to have you back.</p>
+
+      <p>Here's what we've been working on since you last visited:</p>
+
+      <div class="value-grid">
+        <div class="value-item">
+          <div class="icon">⚡</div>
+          <p>{{update_1}}</p>
+        </div>
+        <div class="value-item">
+          <div class="icon">🎯</div>
+          <p>{{update_2}}</p>
+        </div>
+        <div class="value-item">
+          <div class="icon">🌟</div>
+          <p>{{update_3}}</p>
+        </div>
+      </div>
+
+      <!-- Optional: win-back offer -->
+      <div class="offer-box">
+        <p>🎁 Welcome back offer</p>
+        <p style="font-size: 22px; letter-spacing: 2px; color: #16a34a; font-weight: bold;">{{discount_code}}</p>
+        <span>{{discount_percent}}% off your next order — valid for {{offer_expiry}}</span>
+      </div>
+
+      <a href="{{reengagement_link}}" class="button">Come Back & Explore →</a>
+
+      <p class="soft-exit">Not interested anymore? <a href="{{unsubscribe_link}}">Unsubscribe here</a> — no hard feelings.</p>
+    </div>
+
+    <div class="footer">
+      <p>© {{company_name}} · <a href="{{unsubscribe_link}}">Unsubscribe</a></p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,231 @@
+.footer {
+  background-color: #111827;
+  color: #d1d5db;
+  padding: 3rem 0;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  }
+}
+
+.companyInfo {
+  grid-column: span 1;
+}
+
+@media (min-width: 768px) {
+  .companyInfo {
+    grid-column: span 2;
+  }
+}
+
+.logoSection {
+  margin-bottom: 1.5rem;
+  filter: brightness(0) invert(1);
+}
+
+.description {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.parentCompany {
+  margin-bottom: 1.5rem;
+}
+
+.parentLabel {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 0.5rem;
+}
+
+.parentName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.parentTagline {
+  font-size: 0.875rem;
+  color: #d1d5db;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialLink {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #1f2937;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.socialLink:hover {
+  background-color: #374151;
+}
+
+.linkSection h3 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.linkList li {
+  margin-bottom: 0.5rem;
+}
+
+.linkList a {
+  color: #d1d5db;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.linkList a:hover {
+  color: #ffffff;
+}
+
+.contactSection {
+  border-top: 1px solid #374151;
+  padding-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .contactGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.officeInfo h4 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.officeInfo p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.newsletterSection h4 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.newsletterSection p {
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.newsletterForm {
+  display: flex;
+}
+
+.newsletterInput {
+  background-color: #1f2937;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem 0 0 0.5rem;
+  flex: 1;
+  border: none;
+  outline: none;
+}
+
+.newsletterInput:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.newsletterButton {
+  background-color: #3b82f6;
+  color: #ffffff;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.newsletterButton:hover {
+  background-color: #2563eb;
+}
+
+.bottomSection {
+  border-top: 1px solid #374151;
+  padding-top: 2rem;
+}
+
+.bottomContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .bottomContent {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.copyright {
+  font-size: 0.875rem;
+}
+
+.trademark {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

@@ -1,0 +1,206 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+
+const COLUMNS = [
+  {
+    title: 'Product',
+    links: [
+      { label: 'Features', href: '/features' },
+      { label: 'Pricing', href: '/pricing' },
+      { label: 'Templates', href: '/dashboard/campaigns/templates' },
+      { label: 'Integrations', href: '/integrations' },
+      { label: 'Blog', href: '/blog' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Careers', href: '/careers' },
+      { label: 'Press', href: '/press' },
+      { label: 'Partners', href: '/partners' },
+      { label: 'Contact', href: '/contact' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms of Service', href: '/terms' },
+      { label: 'Security', href: '/security' },
+      { label: 'Refund Policy', href: '/refund' },
+      { label: 'Cookie Policy', href: '/privacy' },
+    ],
+  },
+];
+
+const SOCIAL_LINKS = [
+  {
+    label: 'Twitter',
+    href: '#',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'LinkedIn',
+    href: '#',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'YouTube',
+    href: '#',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+      </svg>
+    ),
+  },
+];
+
+export default function StandardFooter() {
+  const [cols, setCols] = useState(4);
+
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      if (w >= 900) setCols(4);
+      else if (w >= 600) setCols(2);
+      else setCols(1);
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  const headingStyle: React.CSSProperties = {
+    color: '#ffffff',
+    fontWeight: 600,
+    fontSize: 14,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 20,
+    marginTop: 0,
+  };
+
+  const linkStyle: React.CSSProperties = {
+    color: '#8b8ba7',
+    textDecoration: 'none',
+    fontSize: 14,
+    lineHeight: '2.2',
+    transition: 'color 0.2s',
+    display: 'block',
+  };
+
+  return (
+    <footer
+      style={{
+        background: '#0f0f1a',
+        borderTop: '1px solid rgba(255,255,255,0.08)',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: '0 auto',
+          padding: '64px 24px 0',
+        }}
+      >
+        {/* Columns grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${cols}, 1fr)`,
+            gap: cols === 1 ? 40 : 48,
+            paddingBottom: 48,
+          }}
+        >
+          {COLUMNS.map((col) => (
+            <div key={col.title}>
+              <h4 style={headingStyle}>{col.title}</h4>
+              {col.links.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  style={linkStyle}
+                  onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#ffffff'; }}
+                  onMouseLeave={(e) => { (e.target as HTMLElement).style.color = '#8b8ba7'; }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          ))}
+
+          {/* Connect column */}
+          <div>
+            <h4 style={headingStyle}>Connect</h4>
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                style={{
+                  ...linkStyle,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#ffffff'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#8b8ba7'; }}
+              >
+                {social.icon}
+                {social.label}
+              </a>
+            ))}
+            <a
+              href="mailto:hello@bestemail.in"
+              style={{
+                ...linkStyle,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#ffffff'; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#8b8ba7'; }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="M22 4l-10 8L2 4" />
+              </svg>
+              hello@bestemail.in
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          style={{
+            borderTop: '1px solid rgba(255,255,255,0.08)',
+            padding: '32px 0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 12,
+          }}
+        >
+          <span style={{ color: '#8b8ba7', fontSize: 13 }}>
+            &copy; 2026 Bestemail. All rights reserved.
+          </span>
+          <span style={{ color: '#8b8ba7', fontSize: 13 }}>
+            Made in India 🇮🇳
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+}

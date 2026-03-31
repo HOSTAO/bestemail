@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Promotional Offer</title>
+</head>
+<body style="margin:0;padding:0;background-color:#fdf2f8;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#fdf2f8;">
+    <tr>
+      <td align="center" style="padding:40px 20px;">
+
+        <!-- Card -->
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:600px;width:100%;">
+
+          <!-- Banner strip -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#ec4899,#8b5cf6);padding:6px 0;text-align:center;">
+              <p style="margin:0;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">🎉 Limited Time Offer</p>
+            </td>
+          </tr>
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#1f2937;padding:40px 40px 32px 40px;text-align:center;">
+              <p style="margin:0 0 8px 0;color:#9ca3af;font-size:13px;text-transform:uppercase;letter-spacing:1px;">{{company_name}} presents</p>
+              <h1 style="margin:0;color:#ffffff;font-size:36px;font-weight:800;line-height:1.2;">{{offer_headline}}</h1>
+              <p style="margin:16px 0 0 0;color:#f9a8d4;font-size:16px;">{{offer_subtext}}</p>
+            </td>
+          </tr>
+
+          <!-- Offer block -->
+          <tr>
+            <td style="padding:40px 40px 0 40px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:linear-gradient(135deg,#fdf2f8,#f3e8ff);border-radius:8px;border:2px dashed #ec4899;">
+                <tr>
+                  <td style="padding:32px;text-align:center;">
+                    <p style="margin:0 0 8px 0;color:#be185d;font-size:14px;font-weight:600;text-transform:uppercase;">Use Code</p>
+                    <p style="margin:0 0 16px 0;color:#1f2937;font-size:40px;font-weight:900;letter-spacing:4px;">{{promo_code}}</p>
+                    <p style="margin:0;color:#7c3aed;font-size:15px;font-weight:500;">{{offer_discount}} — Expires {{expiry_date}}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 40px;">
+              <p style="margin:0 0 20px 0;color:#4b5563;font-size:16px;line-height:1.6;">
+                {{email_body_text}}
+              </p>
+
+              <!-- Benefits list -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px 0;">
+                <tr>
+                  <td style="padding:6px 0;">
+                    <p style="margin:0;color:#374151;font-size:15px;">✅ &nbsp;{{benefit_1}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;">
+                    <p style="margin:0;color:#374151;font-size:15px;">✅ &nbsp;{{benefit_2}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;">
+                    <p style="margin:0;color:#374151;font-size:15px;">✅ &nbsp;{{benefit_3}}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center">
+                    <a href="{{offer_url}}" style="display:inline-block;background:linear-gradient(135deg,#ec4899,#8b5cf6);color:#ffffff;text-decoration:none;padding:16px 44px;border-radius:6px;font-size:17px;font-weight:700;">Claim Offer Now →</a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:20px 0 0 0;color:#9ca3af;font-size:13px;text-align:center;">Offer ends {{expiry_date}}. Limited seats.</p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #e5e7eb;" /></td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:24px 40px;text-align:center;">
+              <p style="margin:0 0 8px 0;color:#9ca3af;font-size:13px;">
+                {{company_name}} · <a href="mailto:{{support_email}}" style="color:#ec4899;text-decoration:none;">{{support_email}}</a>
+              </p>
+              <p style="margin:0;color:#d1d5db;font-size:12px;">
+                {{company_address}}<br/>
+                <a href="{{unsubscribe_url}}" style="color:#d1d5db;text-decoration:underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Card -->
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

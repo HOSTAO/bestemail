@@ -1,0 +1,318 @@
+.shell {
+  min-height: 100vh;
+  background: #020617;
+  color: #e2e8f0;
+}
+
+.frame {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 320px;
+  background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+  border-right: 1px solid rgba(148, 163, 184, 0.16);
+  padding: 28px 20px;
+  box-sizing: border-box;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #2563eb 0%, #22d3ee 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.32);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #67e8f9;
+  font-weight: 700;
+}
+
+.brandTitle {
+  margin: 4px 0 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.workflowCard,
+.sidebarCard {
+  margin-top: 18px;
+  border-radius: 24px;
+  padding: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.workflowTitle {
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.workflowList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.workflowItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.workflowDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.workflowDotComplete {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #bbf7d0;
+}
+
+.workflowDotCurrent {
+  background: rgba(37, 99, 235, 0.22);
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #dbeafe;
+}
+
+.workflowLabel {
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.workflowNote,
+.sidebarCard {
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  color: #cbd5e1;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.navItemActive {
+  background: white;
+  color: #0f172a;
+  box-shadow: 0 16px 30px rgba(2, 6, 23, 0.2);
+}
+
+.navLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  font-size: 12px;
+}
+
+.badgeActive {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.sidebarCard strong {
+  color: white;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  color: #0f172a;
+}
+
+.header {
+  padding: 28px 40px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.92);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(14px);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.title {
+  margin: 10px 0 0;
+  font-size: 42px;
+  line-height: 1.05;
+  font-weight: 750;
+  color: #020617;
+}
+
+.description {
+  margin: 14px 0 0;
+  max-width: 860px;
+  color: #475569;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mobileNav {
+  display: none;
+}
+
+.content {
+  padding: 32px 40px 40px;
+}
+
+@media (max-width: 1024px) {
+  .frame {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    padding-bottom: 18px;
+  }
+
+  .header,
+  .content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .headerRow {
+    flex-direction: column;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .actions > * {
+    flex: 1 1 180px;
+  }
+}
+
+@media (max-width: 720px) {
+  .sidebar {
+    display: none;
+  }
+
+  .header {
+    padding-bottom: 14px;
+  }
+
+  .mobileNav {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .mobileNavItem {
+    min-height: 52px;
+    min-width: 110px;
+    border-radius: 16px;
+    border: 1px solid #dbe4ef;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-decoration: none;
+    color: #334155;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    padding: 8px 10px;
+    flex: 0 0 auto;
+  }
+
+  .mobileNavItemActive {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+  }
+
+  .content {
+    padding-top: 20px;
+  }
+}

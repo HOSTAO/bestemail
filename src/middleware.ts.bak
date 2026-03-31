@@ -1,0 +1,77 @@
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { validateSession } from './lib/auth'
+import { securityHeaders } from './lib/security'
+
+export async function proxy(request: NextRequest) {
+  // Apply security headers to all responses
+  const response = NextResponse.next()
+  
+  // Add security headers
+  Object.entries(securityHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value)
+  })
+  
+  // Check if this is a dashboard route that needs protection
+  const pathname = request.nextUrl.pathname
+  
+  if (pathname.startsWith('/dashboard')) {
+    // Get auth token from cookie
+    const token = request.cookies.get('auth-token')?.value
+    
+    if (!token) {
+      // No token, redirect to login
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    
+    // Validate session
+    try {
+      const user = await validateSession(token)
+      
+      if (!user) {
+        // Invalid session, redirect to login
+        const redirectResponse = NextResponse.redirect(new URL('/login', request.url))
+        redirectResponse.cookies.delete('auth-token')
+        return redirectResponse
+      }
+      
+      // Valid session, allow access
+      response.headers.set('X-User-Email', user.email)
+      response.headers.set('X-User-Role', user.role)
+      
+    } catch (error) {
+      // Error validating session
+      console.error('Session validation error:', error)
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  }
+  
+  // API routes protection
+  if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth/')) {
+    const token = request.headers.get('authorization')?.replace('Bearer ', '') || 
+                 request.cookies.get('auth-token')?.value
+    
+    if (!token && pathname !== '/api/forms') {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+  }
+  
+  // Check for white label subdomain
+  const host = request.headers.get('host') || ''
+  const subdomain = host.split('.')[0]
+  
+  if (subdomain && subdomain !== 'www' && subdomain !== 'bestemail' && subdomain !== 'bestemail-platform') {
+    response.headers.set('X-White-Label', subdomain)
+  }
+  
+  return response
+}
+
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+}

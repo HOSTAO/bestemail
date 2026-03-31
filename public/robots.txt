@@ -1,0 +1,51 @@
+# Robots.txt for bestemail.in
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin areas
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /api/*
+
+# Allow specific API documentation
+Allow: /docs/api-overview
+
+# Sitemap location
+Sitemap: https://bestemail.in/sitemap.xml
+
+# Crawl delay (in seconds)
+Crawl-delay: 1
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Additional security
+User-agent: *
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*/feed/
+Disallow: /*?*
+Disallow: /*~*

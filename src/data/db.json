@@ -1,0 +1,224 @@
+{
+  "users": [
+    {
+      "id": "usr_hmzy2hey",
+      "email": "customer.20463@example.com",
+      "name": "Test Customer",
+      "passwordHash": "7e6e0c3079a08c5cc6036789b57e951f65f82383913ba1a49ae992544f1b4b6e",
+      "role": "member",
+      "createdAt": "2026-03-12T19:01:34.887Z"
+    },
+    {
+      "id": "usr_waiqugls",
+      "email": "dash.32208@example.com",
+      "name": "Dash User",
+      "passwordHash": "7e6e0c3079a08c5cc6036789b57e951f65f82383913ba1a49ae992544f1b4b6e",
+      "role": "member",
+      "createdAt": "2026-03-12T19:01:41.688Z"
+    },
+    {
+      "id": "usr_7xue7o2m",
+      "email": "flow.26650@example.com",
+      "name": "Flow User",
+      "passwordHash": "7e6e0c3079a08c5cc6036789b57e951f65f82383913ba1a49ae992544f1b4b6e",
+      "role": "member",
+      "createdAt": "2026-03-12T19:02:17.967Z"
+    }
+  ],
+  "contacts": [
+    {
+      "id": "ct_rxpa5fzv",
+      "userId": "admin-1",
+      "email": "alice@example.com",
+      "name": "Alice",
+      "city": "Dubai",
+      "businessType": "Agency",
+      "tags": [
+        "lead",
+        "vip"
+      ],
+      "status": "active",
+      "createdAt": "2026-03-12T04:00:53.234Z",
+      "updatedAt": "2026-03-12T04:00:53.234Z"
+    },
+    {
+      "id": "ct_yxhu7mio",
+      "userId": "admin-1",
+      "email": "bob@example.com",
+      "name": "Bob",
+      "city": "Kochi",
+      "businessType": "SaaS",
+      "tags": [
+        "trial"
+      ],
+      "status": "active",
+      "createdAt": "2026-03-12T04:00:53.234Z",
+      "updatedAt": "2026-03-12T04:00:53.234Z"
+    },
+    {
+      "id": "ct_z5ytqixp",
+      "userId": "admin-1",
+      "email": "publiclead@example.com",
+      "name": "Public Lead",
+      "city": "Doha",
+      "businessType": "Retail",
+      "tags": [
+        "source:form",
+        "list:main",
+        "form:fm_ilcojw7g",
+        "form-type:embedded",
+        "form-name:smoke-signup",
+        "form:embedded"
+      ],
+      "status": "active",
+      "createdAt": "2026-03-12T04:00:55.463Z",
+      "updatedAt": "2026-03-12T04:00:55.463Z"
+    },
+    {
+      "id": "ct_b9p1h13r",
+      "userId": "usr_7xue7o2m",
+      "email": "lead@example.com",
+      "name": "Lead User",
+      "city": "Kochi",
+      "businessType": "Retail",
+      "tags": [
+        "vip",
+        "newsletter"
+      ],
+      "status": "active",
+      "createdAt": "2026-03-12T19:02:17.995Z",
+      "updatedAt": "2026-03-12T19:02:17.995Z"
+    },
+    {
+      "id": "ct_r0mzr73b",
+      "userId": "usr_7xue7o2m",
+      "email": "import1@example.com",
+      "name": "Import One",
+      "city": "Dubai",
+      "businessType": "Agency",
+      "tags": [
+        "lead",
+        "vip"
+      ],
+      "status": "active",
+      "createdAt": "2026-03-12T19:02:18.888Z",
+      "updatedAt": "2026-03-12T19:02:18.888Z"
+    }
+  ],
+  "segments": [
+    {
+      "id": "sg_qee012tj",
+      "userId": "usr_7xue7o2m",
+      "name": "Dubai Leads",
+      "rules": [
+        {
+          "field": "city",
+          "value": "Dubai"
+        }
+      ],
+      "createdAt": "2026-03-12T19:02:18.958Z",
+      "updatedAt": "2026-03-12T19:02:18.958Z"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "cp_ca728955",
+      "name": "Smoke Test Campaign",
+      "subject": "Hello MVP",
+      "content": "This is a local smoke test.",
+      "html_content": "This is a local smoke test.",
+      "status": "draft",
+      "createdAt": "2026-03-12T04:00:53.340Z",
+      "updatedAt": "2026-03-12T04:00:53.340Z"
+    },
+    {
+      "id": "cp_h4g9hesk",
+      "name": "Welcome Push",
+      "subject": "Welcome aboard",
+      "content": "Hello there",
+      "html_content": "<p>Hello there</p>",
+      "status": "draft",
+      "createdAt": "2026-03-12T19:02:19.034Z",
+      "updatedAt": "2026-03-12T19:02:19.034Z"
+    }
+  ],
+  "forms": [
+    {
+      "id": "fm_y6xyb1x9",
+      "userId": "usr_7xue7o2m",
+      "name": "Homepage Signup",
+      "type": "embedded",
+      "targetList": "main",
+      "fields": [
+        {
+          "name": "email",
+          "label": "Email",
+          "type": "email",
+          "required": true
+        },
+        {
+          "name": "name",
+          "label": "Name",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "settings": {
+        "successMessage": "Thanks for joining.",
+        "redirectUrl": "",
+        "status": "active",
+        "trackingEnabled": true,
+        "submittedContactTags": [
+          "form:embedded",
+          "list:main",
+          "source:form"
+        ]
+      },
+      "embedCode": "<script async src=\"https://bestemail.in/embed/fm_y6xyb1x9.js\"></script><div id=\"bestemail-fm_y6xyb1x9\"></div>",
+      "submissionsCount": 0,
+      "status": "active",
+      "createdAt": "2026-03-12T19:02:18.998Z",
+      "updatedAt": "2026-03-12T19:02:18.998Z"
+    },
+    {
+      "id": "fm_ilcojw7g",
+      "userId": "admin-1",
+      "name": "Smoke Signup",
+      "type": "embedded",
+      "targetList": "main",
+      "fields": [
+        {
+          "name": "email",
+          "label": "Email",
+          "type": "email",
+          "required": true
+        },
+        {
+          "name": "name",
+          "label": "Name",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "settings": {
+        "successMessage": "Thanks!",
+        "redirectUrl": "",
+        "status": "active",
+        "trackingEnabled": true,
+        "submittedContactTags": [
+          "form:embedded",
+          "list:main",
+          "source:form"
+        ],
+        "lastSubmissionAt": "2026-03-12T04:00:55.464Z",
+        "lastSubmissionTargetList": "main",
+        "lastSubmissionSource": "public-api"
+      },
+      "embedCode": "<script async src=\"https://bestemail.in/embed/fm_ilcojw7g.js\"></script><div id=\"bestemail-fm_ilcojw7g\"></div>",
+      "submissionsCount": 1,
+      "status": "active",
+      "createdAt": "2026-03-12T04:00:54.825Z",
+      "updatedAt": "2026-03-12T04:00:55.464Z"
+    }
+  ]
+}
