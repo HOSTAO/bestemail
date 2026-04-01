@@ -24,7 +24,8 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard', label: 'Home', emoji: '🏠', icon: <HomeIcon /> },
       { href: '/dashboard/campaigns', label: 'Emails', emoji: '✉️', icon: <MailIcon /> },
       { href: '/dashboard/ab-testing', label: 'A/B Test', emoji: '⚡', icon: <ABTestIcon /> },
-      { href: '/dashboard/templates', label: 'Templates', emoji: '🎨', icon: <TemplateIcon /> },
+      { href: '/templates', label: 'Template Library', emoji: '📚', icon: <TemplateIcon /> },
+      { href: '/dashboard/templates', label: 'My Templates', emoji: '🎨', icon: <TemplateIcon /> },
     ],
   },
   {
