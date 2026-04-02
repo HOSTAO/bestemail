@@ -177,7 +177,34 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className={styles.bottomSection}>
+        {/* Hostao Ecosystem Strip */}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 0', textAlign: 'center', marginBottom: 8 }}>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 8, fontWeight: 600 }}>Part of the Hostao Ecosystem</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0 16px' }}>
+              {[
+                ['Hostao', 'https://hostao.com'],
+                ['AutoChat', 'https://autochat.in'],
+                ['RatingE', 'https://ratinge.com'],
+                ['HelpKit', 'https://helpkit.in'],
+                ['CookieSeal', 'https://cookieseal.in'],
+                ['BestEmail', 'https://bestemail.in'],
+                ['RoadmapR', 'https://roadmapr.in'],
+                ['SuperLaunch', 'https://superlaunch.in'],
+              ].map(([name, href], i, arr) => (
+                <span key={name} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12 }}>
+                  {name === 'BestEmail' ? (
+                    <span style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 700 }}>{name}</span>
+                  ) : (
+                    <a href={href} target="_blank" rel="noopener noreferrer"
+                      style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{name}</a>
+                  )}
+                  {i < arr.length - 1 && <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.bottomSection}>
           <div className={styles.bottomContent}>
             <div>
               <p className={styles.copyright}>
