@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { query } from '@/lib/postgres';
 
 export async function GET(request: NextRequest) {
   try {
-    const client = supabaseAdmin || supabase;
-    if (!client) {
-      return NextResponse.json({ error: 'Database not configured' }, { status: 503 });
-    }
-
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
     const subcategory = searchParams.get('subcategory');
@@ -15,34 +10,45 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
 
-    let query = client.from('templates').select('*').eq('is_system', true);
+    let sql = `SELECT * FROM templates WHERE is_system = true`;
+    const params: unknown[] = [];
+    let idx = 1;
 
     if (category && category !== 'All') {
-      query = query.eq('category', category);
+      sql += ` AND category = $${idx}`;
+      params.push(category);
+      idx++;
     }
     if (subcategory && subcategory !== 'All') {
-      query = query.eq('subcategory', subcategory);
+      sql += ` AND subcategory = $${idx}`;
+      params.push(subcategory);
+      idx++;
     }
     if (industry && industry !== 'All') {
-      query = query.contains('industry_tags', [industry.toLowerCase()]);
+      sql += ` AND industry_tags::text ILIKE $${idx}`;
+      params.push(`%${industry.toLowerCase()}%`);
+      idx++;
     }
     if (featured === 'true') {
-      query = query.eq('is_featured', true);
+      sql += ` AND is_featured = true`;
     }
     if (search) {
-      query = query.or(`name.ilike.%${search}%,subject.ilike.%${search}%,subcategory.ilike.%${search}%`);
+      sql += ` AND (name ILIKE $${idx} OR subject ILIKE $${idx} OR subcategory ILIKE $${idx})`;
+      params.push(`%${search}%`);
+      idx++;
     }
 
-    query = query.order('is_featured', { ascending: false }).order('category').order('subcategory').order('name');
+    sql += ` ORDER BY is_featured DESC, category, subcategory, name`;
 
-    const { data, error } = await query;
+    const result = await query(sql, params);
+    const data = result.rows || [];
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ templates: data, count: data.length });
+  } catch (error: any) {
+    // If templates table doesn't exist, return empty
+    if (error?.code === '42P01' || (typeof error?.message === 'string' && error.message.includes('does not exist'))) {
+      return NextResponse.json({ templates: [], count: 0 });
     }
-
-    return NextResponse.json({ templates: data || [], count: data?.length || 0 });
-  } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json({ error: message }, { status: 500 });
   }

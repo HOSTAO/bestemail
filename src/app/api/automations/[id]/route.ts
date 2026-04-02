@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
-import { supabaseAdmin } from '@/lib/supabase';
-import { isMigrationPending, migrationPendingResponse } from '@/lib/db-utils';
+import { db } from '@/lib/db';
 
 function trimString(value: unknown, maxLength: number) {
   return typeof value === 'string' ? value.trim().slice(0, maxLength) : '';
@@ -11,31 +10,20 @@ const VALID_TRIGGER_TYPES = ['tag_added', 'form_submitted', 'subscriber_created'
 const VALID_ACTION_TYPES = ['add_tag', 'remove_tag', 'enroll_sequence', 'send_email', 'update_score'];
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuth();
     const { id } = await params;
 
-    if (!supabaseAdmin) {
-      return NextResponse.json({ error: 'Database connection requires Supabase configuration' }, { status: 503 });
-    }
-
-    const { data: automation, error } = await supabaseAdmin
-      .from('automations')
-      .select('*')
-      .eq('id', id)
-      .eq('user_id', user.id)
-      .single();
-
-    if (error || !automation) {
+    const automation = await db.getAutomation(user.id, id);
+    if (!automation) {
       return NextResponse.json({ error: 'Automation not found' }, { status: 404 });
     }
 
     return NextResponse.json({ data: automation });
   } catch (error) {
-    if (isMigrationPending(error)) return migrationPendingResponse();
     console.error('Failed to get automation:', error);
     const message = error instanceof Error ? error.message : 'Failed to get automation';
     const statusCode = message === 'Unauthorized' ? 401 : 500;
@@ -51,24 +39,13 @@ export async function PUT(
     const user = await requireAuth();
     const { id } = await params;
 
-    if (!supabaseAdmin) {
-      return NextResponse.json({ error: 'Database connection requires Supabase configuration' }, { status: 503 });
-    }
-
-    // Verify ownership
-    const { data: existing } = await supabaseAdmin
-      .from('automations')
-      .select('id')
-      .eq('id', id)
-      .eq('user_id', user.id)
-      .single();
-
+    const existing = await db.getAutomation(user.id, id);
     if (!existing) {
       return NextResponse.json({ error: 'Automation not found' }, { status: 404 });
     }
 
     const body = await request.json();
-    const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    const updates: Record<string, unknown> = {};
 
     if (body.name !== undefined) {
       const name = trimString(body.name, 255);
@@ -108,23 +85,9 @@ export async function PUT(
       updates.action_config = typeof body.action_config === 'object' ? body.action_config : {};
     }
 
-    const { data: automation, error } = await supabaseAdmin
-      .from('automations')
-      .update(updates)
-      .eq('id', id)
-      .eq('user_id', user.id)
-      .select()
-      .single();
-
-    if (error) {
-      if (isMigrationPending(error)) return migrationPendingResponse();
-      console.error('Failed to update automation:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
+    const automation = await db.updateAutomation(user.id, id, updates);
     return NextResponse.json({ data: automation });
   } catch (error) {
-    if (isMigrationPending(error)) return migrationPendingResponse();
     console.error('Failed to update automation:', error);
     const message = error instanceof Error ? error.message : 'Failed to update automation';
     const statusCode = message === 'Unauthorized' ? 401 : 500;
@@ -133,43 +96,21 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await requireAuth();
     const { id } = await params;
 
-    if (!supabaseAdmin) {
-      return NextResponse.json({ error: 'Database connection requires Supabase configuration' }, { status: 503 });
-    }
-
-    const { data: existing } = await supabaseAdmin
-      .from('automations')
-      .select('id')
-      .eq('id', id)
-      .eq('user_id', user.id)
-      .single();
-
+    const existing = await db.getAutomation(user.id, id);
     if (!existing) {
       return NextResponse.json({ error: 'Automation not found' }, { status: 404 });
     }
 
-    const { error } = await supabaseAdmin
-      .from('automations')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', user.id);
-
-    if (error) {
-      if (isMigrationPending(error)) return migrationPendingResponse();
-      console.error('Failed to delete automation:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
+    await db.deleteAutomation(user.id, id);
     return NextResponse.json({ message: 'Automation deleted' });
   } catch (error) {
-    if (isMigrationPending(error)) return migrationPendingResponse();
     console.error('Failed to delete automation:', error);
     const message = error instanceof Error ? error.message : 'Failed to delete automation';
     const statusCode = message === 'Unauthorized' ? 401 : 500;

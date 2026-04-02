@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import MigrationBanner from '@/components/MigrationBanner';
 
 /* ─── types ─── */
 interface Automation {
@@ -408,7 +407,20 @@ export default function AutomationPage() {
   }
 
   /* ─── render ─── */
-  if (migrationPending) return <MigrationBanner />;
+  if (migrationPending) return (
+    <div style={{ padding: isMobile ? '16px 16px 40px' : '24px 24px 40px', maxWidth: 1100, margin: '0 auto', background: '#F8F9FF', minHeight: '100vh' }}>
+      <div style={{ ...cardStyle, padding: isMobile ? 32 : 48, textAlign: 'center', marginTop: 40 }}>
+        <div style={{ fontSize: 52, marginBottom: 16 }}>&#9889;</div>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1a1a2e', margin: '0 0 8px 0' }}>Automations coming soon</h2>
+        <p style={{ color: '#8b8ba7', fontSize: 15, margin: '0 0 8px 0', maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+          The automations database table needs to be set up before you can create IF/THEN rules. Please ask your administrator to run the database migration.
+        </p>
+        <p style={{ color: '#64648b', fontSize: 13, margin: 0 }}>
+          Once the migration is complete, refresh this page to get started.
+        </p>
+      </div>
+    </div>
+  );
 
   return (
     <div style={{ padding: isMobile ? '16px 16px 40px' : '24px 24px 40px', maxWidth: 1100, margin: '0 auto', background: '#F8F9FF', minHeight: '100vh' }}>
@@ -624,7 +636,7 @@ export default function AutomationPage() {
 
                   {/* Run count */}
                   <div style={{ marginTop: 10, fontSize: 13, color: '#64648b' }}>
-                    Executed {a.run_count || 0} time{(a.run_count || 0) !== 1 ? 's' : ''}
+                    {a.run_count || 0} run{(a.run_count || 0) !== 1 ? 's' : ''}
                   </div>
                 </div>
 

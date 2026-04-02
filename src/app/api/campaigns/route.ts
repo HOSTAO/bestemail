@@ -31,8 +31,18 @@ export async function POST(request: NextRequest) {
     const subject = trimString(body.subject, 200);
     const content = trimString(body.content, 100_000);
     const htmlContent = normalizeHtml(body.html_content);
-    const status = body.status === 'draft' ? 'draft' : 'draft';
     const segmentId = typeof body.segment_id === 'string' && body.segment_id.trim() ? body.segment_id.trim() : undefined;
+
+    // Support scheduled_at — if provided with a valid ISO date, allow status "scheduled"
+    let scheduledAt: string | undefined;
+    let status: string = 'draft';
+    if (typeof body.scheduled_at === 'string' && body.scheduled_at.trim()) {
+      const parsed = new Date(body.scheduled_at);
+      if (!isNaN(parsed.getTime())) {
+        scheduledAt = parsed.toISOString();
+        status = 'scheduled';
+      }
+    }
 
     if (!name) {
       return NextResponse.json({ error: 'Campaign name is required' }, { status: 400 });
@@ -49,6 +59,7 @@ export async function POST(request: NextRequest) {
       html_content: htmlContent || undefined,
       segment_id: segmentId,
       status,
+      scheduled_at: scheduledAt,
     });
 
     return NextResponse.json(campaign, { status: 201 });

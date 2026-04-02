@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
-import { supabaseAdmin } from '@/lib/supabase';
-import { isMigrationPending, migrationPendingResponse } from '@/lib/db-utils';
+import { db } from '@/lib/db';
 
 function trimString(value: unknown, maxLength: number) {
   return typeof value === 'string' ? value.trim().slice(0, maxLength) : '';
@@ -13,26 +12,13 @@ const VALID_ACTION_TYPES = ['add_tag', 'remove_tag', 'enroll_sequence', 'send_em
 export async function GET() {
   try {
     const user = await requireAuth();
-
-    if (!supabaseAdmin) {
-      return NextResponse.json({ error: 'Database connection requires Supabase configuration' }, { status: 503 });
-    }
-
-    const { data: automations, error } = await supabaseAdmin
-      .from('automations')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      if (isMigrationPending(error)) return migrationPendingResponse();
-      console.error('Failed to list automations:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
+    const automations = await db.getAutomations(user.id);
     return NextResponse.json({ data: automations || [] });
-  } catch (error) {
-    if (isMigrationPending(error)) return migrationPendingResponse();
+  } catch (error: any) {
+    // If the automations table doesn't exist yet, return a friendly response
+    if (error?.code === '42P01' || (typeof error?.message === 'string' && error.message.includes('does not exist'))) {
+      return NextResponse.json({ data: [], migrationRequired: true });
+    }
     console.error('Failed to list automations:', error);
     const message = error instanceof Error ? error.message : 'Failed to list automations';
     const statusCode = message === 'Unauthorized' ? 401 : 500;
@@ -43,12 +29,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const user = await requireAuth();
-
-    if (!supabaseAdmin) {
-      return NextResponse.json({ error: 'Database connection requires Supabase configuration' }, { status: 503 });
-    }
-
     const body = await request.json();
+
     const name = trimString(body.name, 255);
     const trigger_type = trimString(body.trigger_type, 100);
     const action_type = trimString(body.action_type, 100);
@@ -73,34 +55,20 @@ export async function POST(request: NextRequest) {
     const trigger_config = body.trigger_config && typeof body.trigger_config === 'object' ? body.trigger_config : {};
     const action_config = body.action_config && typeof body.action_config === 'object' ? body.action_config : {};
 
-    const now = new Date().toISOString();
-
-    const { data: automation, error } = await supabaseAdmin
-      .from('automations')
-      .insert({
-        user_id: user.id,
-        name,
-        trigger_type,
-        trigger_config,
-        action_type,
-        action_config,
-        status,
-        run_count: 0,
-        created_at: now,
-        updated_at: now,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      if (isMigrationPending(error)) return migrationPendingResponse();
-      console.error('Failed to create automation:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const automation = await db.createAutomation(user.id, {
+      name,
+      trigger_type,
+      trigger_config,
+      action_type,
+      action_config,
+      status,
+    });
 
     return NextResponse.json({ data: automation }, { status: 201 });
-  } catch (error) {
-    if (isMigrationPending(error)) return migrationPendingResponse();
+  } catch (error: any) {
+    if (error?.code === '42P01' || (typeof error?.message === 'string' && error.message.includes('does not exist'))) {
+      return NextResponse.json({ error: 'Automations table not set up yet', migrationRequired: true }, { status: 503 });
+    }
     console.error('Failed to create automation:', error);
     const message = error instanceof Error ? error.message : 'Failed to create automation';
     const statusCode = message === 'Unauthorized' ? 401 : 500;

@@ -33,6 +33,8 @@ type BlacklistCheck = {
   lastChecked: string;
 };
 
+type DateRange = 7 | 30 | 90;
+
 export default function AnalyticsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -40,6 +42,7 @@ export default function AnalyticsPage() {
   const [domainStatus, setDomainStatus] = useState<'healthy' | 'warning' | 'checking'>('checking');
   const [blacklists, setBlacklists] = useState<BlacklistCheck[]>([]);
   const [lastChecked, setLastChecked] = useState<string>('');
+  const [dateRange, setDateRange] = useState<DateRange>(30);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -112,7 +115,8 @@ export default function AnalyticsPage() {
     );
   }
 
-  const sentCampaigns = campaigns.filter(c => c.status === 'sent');
+  const cutoff = new Date(Date.now() - dateRange * 24 * 60 * 60 * 1000).toISOString();
+  const sentCampaigns = campaigns.filter(c => c.status === 'sent' && (!c.created_at || c.created_at >= cutoff));
   const totalSent = sentCampaigns.reduce((sum, c) => sum + (c.sent_count ?? c.sent ?? 0), 0);
   const totalOpens = sentCampaigns.reduce((sum, c) => sum + (c.open_count ?? c.opens ?? 0), 0);
   const totalClicks = sentCampaigns.reduce((sum, c) => sum + (c.click_count ?? c.clicks ?? 0), 0);
@@ -156,14 +160,30 @@ export default function AnalyticsPage() {
           <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, color: '#1a1a2e', margin: 0 }}>Reports</h1>
           <p style={{ color: '#8b8ba7', marginTop: 4, fontSize: 15 }}>See how your emails are doing</p>
         </div>
-        {sentCampaigns.length > 0 && (
-          <button onClick={exportCSV} style={{
-            borderRadius: 10, background: '#fff', color: '#1a1a2e', border: '1px solid #E0F7FA',
-            padding: '10px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer', minHeight: 44,
-          }}>
-            Export Report as CSV
-          </button>
-        )}
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <select
+            value={dateRange}
+            onChange={e => setDateRange(Number(e.target.value) as DateRange)}
+            style={{
+              borderRadius: 10, background: '#fff', color: '#1a1a2e', border: '1px solid #E0F7FA',
+              padding: '10px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer', minHeight: 44,
+              appearance: 'none', backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'10\' height=\'6\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%238b8ba7\'/%3E%3C/svg%3E")',
+              backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', paddingRight: 32,
+            }}
+          >
+            <option value={7}>Last 7 days</option>
+            <option value={30}>Last 30 days</option>
+            <option value={90}>Last 90 days</option>
+          </select>
+          {sentCampaigns.length > 0 && (
+            <button onClick={exportCSV} style={{
+              borderRadius: 10, background: '#fff', color: '#1a1a2e', border: '1px solid #E0F7FA',
+              padding: '10px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer', minHeight: 44,
+            }}>
+              Export CSV
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Summary Stats */}
@@ -198,6 +218,25 @@ export default function AnalyticsPage() {
           );
         })}
       </div>
+
+      {/* No Data Empty State */}
+      {campaigns.length === 0 && (
+        <div style={{
+          ...cardStyle, padding: isMobile ? 32 : 48, textAlign: 'center', marginBottom: 24,
+        }}>
+          <div style={{ fontSize: 52, marginBottom: 16 }}>📊</div>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1a1a2e', margin: '0 0 8px' }}>No data yet</h2>
+          <p style={{ color: '#8b8ba7', fontSize: 15, margin: '0 0 20px', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
+            Send your first campaign to see analytics here. Once your emails are delivered, you will see open rates, click rates, and more.
+          </p>
+          <Link href="/dashboard/campaigns/new" style={{
+            display: 'inline-block', borderRadius: 12, background: '#00B4D8', color: '#fff',
+            padding: '12px 24px', fontSize: 14, fontWeight: 600, textDecoration: 'none', minHeight: 44,
+          }}>
+            Send Your First Email
+          </Link>
+        </div>
+      )}
 
       {/* Weekly Summary Card */}
       {sentCampaigns.length > 0 && (

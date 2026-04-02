@@ -509,6 +509,75 @@ export const db = {
     return result.rows[0] || null;
   },
 
+  async getAutomations(userId: string) {
+    const result = await query(
+      `SELECT * FROM automations WHERE user_id = $1 ORDER BY created_at DESC`,
+      [userId]
+    );
+    return result.rows;
+  },
+
+  async getAutomation(userId: string, automationId: string) {
+    const result = await query(
+      `SELECT * FROM automations WHERE id = $1 AND user_id = $2 LIMIT 1`,
+      [automationId, userId]
+    );
+    return result.rows[0] || null;
+  },
+
+  async createAutomation(userId: string, data: Record<string, unknown>) {
+    const result = await query(
+      `INSERT INTO automations (user_id, name, trigger_type, trigger_config, action_type, action_config, status, run_count)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 0)
+       RETURNING *`,
+      [
+        userId,
+        data.name,
+        data.trigger_type,
+        JSON.stringify(data.trigger_config || {}),
+        data.action_type,
+        JSON.stringify(data.action_config || {}),
+        data.status || 'active',
+      ]
+    );
+    return result.rows[0];
+  },
+
+  async updateAutomation(userId: string, automationId: string, data: Record<string, unknown>) {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined) {
+        if (key === 'trigger_config' || key === 'action_config') {
+          fields.push(`${key} = $${idx}`);
+          values.push(JSON.stringify(value));
+        } else {
+          fields.push(`${key} = $${idx}`);
+          values.push(value);
+        }
+        idx++;
+      }
+    }
+
+    if (fields.length === 0) return null;
+
+    values.push(automationId, userId);
+    const result = await query(
+      `UPDATE automations SET ${fields.join(', ')}, updated_at = NOW() WHERE id = $${idx} AND user_id = $${idx + 1} RETURNING *`,
+      values
+    );
+    return result.rows[0] || null;
+  },
+
+  async deleteAutomation(userId: string, automationId: string) {
+    await query(
+      `DELETE FROM automations WHERE id = $1 AND user_id = $2`,
+      [automationId, userId]
+    );
+  },
+
   async getSettings(userId: string) {
     const result = await query(
       `SELECT * FROM settings WHERE user_id = $1 LIMIT 1`,

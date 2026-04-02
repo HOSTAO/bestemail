@@ -33,6 +33,10 @@ export default function CampaignsListPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<StatusFilter>('all');
+  const [scheduleId, setScheduleId] = useState<string | null>(null);
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [scheduleTime, setScheduleTime] = useState('');
+  const [scheduling, setScheduling] = useState(false);
   const isMobile = useIsMobile();
 
   const loadCampaigns = async () => {
@@ -84,6 +88,32 @@ export default function CampaignsListPage() {
     } catch {
       toast.error('Failed to duplicate');
     }
+  };
+
+  const scheduleCampaign = async () => {
+    if (!scheduleId || !scheduleDate || !scheduleTime) return;
+    setScheduling(true);
+    try {
+      const scheduledAt = new Date(`${scheduleDate}T${scheduleTime}`).toISOString();
+      const res = await fetch(`/api/campaigns/${scheduleId}/schedule`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scheduled_at: scheduledAt }),
+      });
+      if (res.ok) {
+        toast.success('Campaign scheduled!');
+        setScheduleId(null);
+        setScheduleDate('');
+        setScheduleTime('');
+        loadCampaigns();
+      } else {
+        const j = await res.json();
+        toast.error(j.error || 'Failed to schedule');
+      }
+    } catch {
+      toast.error('Failed to schedule');
+    }
+    setScheduling(false);
   };
 
   const filtered = campaigns.filter(c => {
@@ -226,10 +256,14 @@ export default function CampaignsListPage() {
                         Subject: {campaign.subject}
                       </div>
                     )}
-                    <div style={{ fontSize: 12, color: '#8b8ba7' }}>
+                    <div style={{ fontSize: 12, color: '#8b8ba7', display: 'flex', alignItems: 'center', gap: 4 }}>
                       {campaign.created_at ? new Date(campaign.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}
                       {campaign.scheduled_at && campaign.status === 'scheduled' && (
-                        <span> · Scheduled: {new Date(campaign.scheduled_at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#d97706' }}>
+                          {' · '}
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                          {new Date(campaign.scheduled_at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -269,6 +303,16 @@ export default function CampaignsListPage() {
                   }}>
                     Edit
                   </Link>
+                  {(campaign.status === 'draft') && (
+                    <button onClick={() => { setScheduleId(campaign.id); setScheduleDate(''); setScheduleTime(''); }} style={{
+                      borderRadius: 8, border: '1px solid #fef3c7', background: '#fffbeb',
+                      padding: '6px 14px', fontSize: 12, fontWeight: 600, color: '#d97706',
+                      cursor: 'pointer', minHeight: 32, display: 'inline-flex', alignItems: 'center', gap: 4,
+                    }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      Schedule
+                    </button>
+                  )}
                   <button onClick={() => duplicateCampaign(campaign)} style={{
                     borderRadius: 8, border: '1px solid #E0F7FA', background: '#fff',
                     padding: '6px 14px', fontSize: 12, fontWeight: 600, color: '#64648b',
@@ -287,6 +331,74 @@ export default function CampaignsListPage() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Schedule Modal */}
+      {scheduleId && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex',
+          alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20,
+        }} onClick={() => setScheduleId(null)}>
+          <div style={{
+            ...cardStyle, padding: 28, maxWidth: 400, width: '100%',
+          }} onClick={e => e.stopPropagation()}>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#1a1a2e', margin: '0 0 4px' }}>Schedule Email</h3>
+            <p style={{ fontSize: 13, color: '#8b8ba7', margin: '0 0 20px' }}>
+              Choose when to send this email
+            </p>
+            <div style={{ marginBottom: 14 }}>
+              <label style={{ fontSize: 13, fontWeight: 600, color: '#1a1a2e', display: 'block', marginBottom: 6 }}>Date</label>
+              <input
+                type="date"
+                value={scheduleDate}
+                onChange={e => setScheduleDate(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                style={{
+                  width: '100%', borderRadius: 8, border: '1px solid #E0F7FA',
+                  padding: '10px 14px', fontSize: 15, boxSizing: 'border-box', outline: 'none',
+                  color: '#1a1a2e', background: '#fff',
+                }}
+              />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ fontSize: 13, fontWeight: 600, color: '#1a1a2e', display: 'block', marginBottom: 6 }}>Time</label>
+              <input
+                type="time"
+                value={scheduleTime}
+                onChange={e => setScheduleTime(e.target.value)}
+                style={{
+                  width: '100%', borderRadius: 8, border: '1px solid #E0F7FA',
+                  padding: '10px 14px', fontSize: 15, boxSizing: 'border-box', outline: 'none',
+                  color: '#1a1a2e', background: '#fff',
+                }}
+              />
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                onClick={scheduleCampaign}
+                disabled={!scheduleDate || !scheduleTime || scheduling}
+                style={{
+                  flex: 1, borderRadius: 10, background: (!scheduleDate || !scheduleTime) ? '#E0F7FA' : '#00B4D8',
+                  color: (!scheduleDate || !scheduleTime) ? '#8b8ba7' : '#fff', border: 'none',
+                  padding: '11px 20px', fontSize: 14, fontWeight: 600, cursor: 'pointer', minHeight: 44,
+                  opacity: scheduling ? 0.6 : 1,
+                }}
+              >
+                {scheduling ? 'Scheduling...' : 'Schedule'}
+              </button>
+              <button
+                onClick={() => setScheduleId(null)}
+                style={{
+                  borderRadius: 10, background: '#fff', color: '#64648b',
+                  border: '1px solid #E0F7FA', padding: '11px 20px', fontSize: 14,
+                  fontWeight: 500, cursor: 'pointer', minHeight: 44,
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
