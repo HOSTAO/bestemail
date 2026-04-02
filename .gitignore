@@ -28,6 +28,16 @@ yarn-error.log*
 .env*.local
 .env
 
+# Vercel pulled/exported env files (contain real secrets — NEVER commit these)
+.env.vercel
+.env.vercel-*
+.env.prod-*
+.env.production.*
+.env.pulled
+.env.pulled.*
+.env.prod
+*.pulled
+
 # vercel
 .vercel
 
